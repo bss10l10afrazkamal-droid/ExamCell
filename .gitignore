@@ -1,0 +1,7 @@
+/build/
+/bin/
+/mysql-connector-j-9.6.0/
+/timetable.txt
+/tools/
+.DS_Store
+Thumbs.db

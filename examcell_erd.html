@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ExamCell — Entity Relationship Diagram</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #f8f9fa; font-family: 'Segoe UI', Arial, sans-serif; }
+  h1 { text-align: center; padding: 20px; font-size: 1.5rem; color: #333; }
+
+  .col-header { font-size: 15px; font-weight: 700; text-anchor: middle; }
+
+  /* Box styles */
+  .box-file     { fill: #e8e8e8; stroke: #999; }
+  .box-class    { fill: #c8e6c9; stroke: #4caf50; }
+  .box-abstract { fill: #b3d9ff; stroke: #1976d2; }
+  .box-method   { fill: #e8f5e9; stroke: #81c784; }
+  .box-field    { fill: #f1f8e9; stroke: #aed581; }
+  .box-interface{ fill: #ffe0b2; stroke: #f57c00; }
+  .box-db       { fill: #f3e5f5; stroke: #9c27b0; }
+  .box-servlet  { fill: #e1bee7; stroke: #ab47bc; }
+  .box-output   { fill: #ffecb3; stroke: #ffa000; }
+  .box-main     { fill: #fce4b8; stroke: #e8a838; }
+  .box-swing    { fill: #d1ecf1; stroke: #17a2b8; }
+  .box-jsp      { fill: #ffd6d6; stroke: #e53935; }
+
+  .box-title    { font-size: 12.5px; font-weight: 700; dominant-baseline: middle; }
+  .box-detail   { font-size: 10.5px; fill: #444; dominant-baseline: middle; }
+  .box-subtitle { font-size: 10px; fill: #777; font-style: italic; dominant-baseline: middle; }
+  .box-label    { font-size: 10px; fill: #666; font-weight: 600; dominant-baseline: middle; }
+
+  /* Arrows */
+  .arrow { stroke-width: 1.8; fill: none; }
+  .arrow-inherits { stroke: #8e44ad; }
+  .arrow-implements { stroke: #f57c00; stroke-dasharray: 5 3; }
+  .arrow-contains { stroke: #27ae60; }
+  .arrow-calls    { stroke: #e67e22; }
+  .arrow-returns  { stroke: #2980b9; }
+  .arrow-creates  { stroke: #c0392b; }
+  .arrow-reads    { stroke: #7f8c8d; }
+  .arrow-saves    { stroke: #d35400; stroke-dasharray: 4 2; }
+  .arrow-import   { stroke: #888; stroke-dasharray: 6 3; }
+
+  .arrow-label { font-size: 10px; fill: #444; font-style: italic; }
+
+  .legend rect { rx: 3; }
+  .legend text { font-size: 11px; dominant-baseline: middle; fill: #333; }
+</style>
+</head>
+<body>
+<h1>ExamCell — Complete Entity Relationship Diagram</h1>
+<div style="width:1800px; height:1500px; margin: 0 auto; position: relative;">
+<svg viewBox="0 0 1800 1500" xmlns="http://www.w3.org/2000/svg">
+
+<!-- ===== ARROW MARKERS ===== -->
+<defs>
+  <marker id="ar-inherits" viewBox="0 0 12 8" refX="12" refY="4" markerWidth="10" markerHeight="8" orient="auto">
+    <path d="M0,0 L12,4 L0,8 Z" fill="none" stroke="#8e44ad" stroke-width="1.5"/>
+  </marker>
+  <marker id="ar-implements" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,3 L0,6 Z" fill="#f57c00"/>
+  </marker>
+  <marker id="ar-contains" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,3 L0,6 Z" fill="#27ae60"/>
+  </marker>
+  <marker id="ar-calls" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,3 L0,6 Z" fill="#e67e22"/>
+  </marker>
+  <marker id="ar-returns" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,3 L0,6 Z" fill="#2980b9"/>
+  </marker>
+  <marker id="ar-creates" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,3 L0,6 Z" fill="#c0392b"/>
+  </marker>
+  <marker id="ar-reads" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,3 L0,6 Z" fill="#7f8c8d"/>
+  </marker>
+  <marker id="ar-saves" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,3 L0,6 Z" fill="#d35400"/>
+  </marker>
+  <marker id="ar-import" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,3 L0,6 Z" fill="#888"/>
+  </marker>
+</defs>
+
+<!-- ===== COLUMN BACKGROUNDS ===== -->
+<rect x="10"   y="55"  width="330" height="1420" rx="12" fill="#f0f8ff" stroke="#b0c8e0" stroke-width="1"/>
+<rect x="355"  y="55"  width="330" height="1420" rx="12" fill="#f4f9f4" stroke="#b0d0b0" stroke-width="1"/>
+<rect x="700"  y="55"  width="360" height="1420" rx="12" fill="#fdf8f0" stroke="#e0d0a0" stroke-width="1"/>
+<rect x="1075" y="55"  width="360" height="1420" rx="12" fill="#fdf0ff" stroke="#d0a0d0" stroke-width="1"/>
+<rect x="1450" y="55"  width="330" height="1420" rx="12" fill="#fff0f0" stroke="#d0a0a0" stroke-width="1"/>
+
+<!-- Column headers -->
+<text x="175"  y="82" class="col-header" fill="#1565c0">Models.java</text>
+<text x="520"  y="82" class="col-header" fill="#2e7d32">Scheduler.java</text>
+<text x="880"  y="82" class="col-header" fill="#bf360c">BacktrackingScheduler.java</text>
+<text x="1255" y="82" class="col-header" fill="#6a1b9a">MainFrame.java + DatabaseHelper.java</text>
+<text x="1615" y="82" class="col-header" fill="#b71c1c">Web Layer</text>
+
+
+<!-- ================================================================ -->
+<!-- =================== COLUMN 1: Models.java ====================== -->
+<!-- ================================================================ -->
+
+<!-- Exportable Interface -->
+<rect x="30" y="105" width="290" height="55" rx="8" class="box-interface"/>
+<text x="175" y="125" class="box-title" text-anchor="middle">«interface» Exportable</text>
+<line x1="40" y1="133" x2="310" y2="133" stroke="#f57c00" stroke-width="1"/>
+<text x="45" y="150" class="box-detail">+ exportToFile(filePath: String): void</text>
+
+<!-- Subject class -->
+<rect x="30" y="195" width="290" height="240" rx="8" class="box-class"/>
+<text x="175" y="216" class="box-title" text-anchor="middle">Subject</text>
+<line x1="40" y1="225" x2="310" y2="225" stroke="#4caf50" stroke-width="1"/>
+<text x="40" y="243" class="box-label">Fields (private):</text>
+<text x="45" y="260" class="box-detail">- subjectId: int</text>
+<text x="45" y="275" class="box-detail">- name: String</text>
+<text x="45" y="290" class="box-detail">- department: String</text>
+<text x="45" y="305" class="box-detail">- semester: int</text>
+<text x="45" y="320" class="box-detail">- estimatedStudents: int</text>
+<line x1="40" y1="330" x2="310" y2="330" stroke="#4caf50" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="40" y="345" class="box-label">Constructors (Overloaded):</text>
+<text x="45" y="360" class="box-detail">+ Subject(id,name,dept,sem,students)</text>
+<text x="45" y="375" class="box-detail">+ Subject(id,name)  ← defaults dept/sem</text>
+<line x1="40" y1="383" x2="310" y2="383" stroke="#4caf50" stroke-width="0.5" stroke-dasharray="3 2"/>
+<rect x="40" y="390" width="270" height="22" rx="3" class="box-method"/>
+<text x="175" y="403" class="box-detail" text-anchor="middle">+ toString(): String  [Override]</text>
+<text x="45" y="425" class="box-detail">+ getSubjectId(), getName(), getDept()...</text>
+
+<!-- Classroom class -->
+<rect x="30" y="470" width="290" height="175" rx="8" class="box-class"/>
+<text x="175" y="491" class="box-title" text-anchor="middle">Classroom</text>
+<line x1="40" y1="500" x2="310" y2="500" stroke="#4caf50" stroke-width="1"/>
+<text x="40" y="517" class="box-label">Fields (private):</text>
+<text x="45" y="533" class="box-detail">- roomId: int</text>
+<text x="45" y="548" class="box-detail">- roomName: String</text>
+<text x="45" y="563" class="box-detail">- capacity: int</text>
+<line x1="40" y1="571" x2="310" y2="571" stroke="#4caf50" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="40" y="586" class="box-label">Constructor + Getters:</text>
+<text x="45" y="601" class="box-detail">+ Classroom(roomId, roomName, capacity)</text>
+<rect x="40" y="610" width="270" height="22" rx="3" class="box-method"/>
+<text x="175" y="623" class="box-detail" text-anchor="middle">+ toString(): String  [Override]</text>
+
+<!-- Faculty class -->
+<rect x="30" y="680" width="290" height="170" rx="8" class="box-class"/>
+<text x="175" y="701" class="box-title" text-anchor="middle">Faculty</text>
+<line x1="40" y1="710" x2="310" y2="710" stroke="#4caf50" stroke-width="1"/>
+<text x="40" y="727" class="box-label">Fields (private):</text>
+<text x="45" y="743" class="box-detail">- facultyId: int</text>
+<text x="45" y="758" class="box-detail">- name: String</text>
+<text x="45" y="773" class="box-detail">- department: String</text>
+<line x1="40" y1="781" x2="310" y2="781" stroke="#4caf50" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="40" y="796" class="box-label">Constructor + Getters:</text>
+<text x="45" y="811" class="box-detail">+ Faculty(facultyId, name, department)</text>
+<rect x="40" y="820" width="270" height="22" rx="3" class="box-method"/>
+<text x="175" y="833" class="box-detail" text-anchor="middle">+ toString(): String  [Override]</text>
+
+<!-- TimeSlot class -->
+<rect x="30" y="885" width="290" height="175" rx="8" class="box-class"/>
+<text x="175" y="906" class="box-title" text-anchor="middle">TimeSlot</text>
+<line x1="40" y1="915" x2="310" y2="915" stroke="#4caf50" stroke-width="1"/>
+<text x="40" y="932" class="box-label">Fields (private):</text>
+<text x="45" y="948" class="box-detail">- slotId: int</text>
+<text x="45" y="963" class="box-detail">- examDate: String</text>
+<text x="45" y="978" class="box-detail">- startTime: String</text>
+<text x="45" y="993" class="box-detail">- endTime: String</text>
+<line x1="40" y1="1001" x2="310" y2="1001" stroke="#4caf50" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="40" y="1016" class="box-label">Constructor + Getters:</text>
+<text x="45" y="1031" class="box-detail">+ TimeSlot(slotId, date, start, end)</text>
+<rect x="40" y="1040" width="270" height="22" rx="3" class="box-method"/>
+<text x="175" y="1053" class="box-detail" text-anchor="middle">+ toString(): String  [Override]</text>
+
+<!-- Allocation class -->
+<rect x="30" y="1095" width="290" height="200" rx="8" class="box-class" stroke-width="2"/>
+<text x="175" y="1116" class="box-title" text-anchor="middle" font-size="13px">⭐ Allocation</text>
+<line x1="40" y1="1126" x2="310" y2="1126" stroke="#4caf50" stroke-width="1.5"/>
+<text x="40" y="1143" class="box-label">Fields (holds references to all 4 models):</text>
+<text x="45" y="1160" class="box-detail">- subject: Subject</text>
+<text x="45" y="1175" class="box-detail">- classroom: Classroom</text>
+<text x="45" y="1190" class="box-detail">- faculty: Faculty</text>
+<text x="45" y="1205" class="box-detail">- timeSlot: TimeSlot</text>
+<line x1="40" y1="1213" x2="310" y2="1213" stroke="#4caf50" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="40" y="1228" class="box-label">Constructor:</text>
+<text x="45" y="1244" class="box-detail">+ Allocation(subject, classroom, faculty, slot)</text>
+<text x="40" y="1260" class="box-label">Getters + Override:</text>
+<rect x="40" y="1267" width="270" height="22" rx="3" class="box-method"/>
+<text x="175" y="1280" class="box-detail" text-anchor="middle">+ toString(): String  [Override]</text>
+
+<!-- Allocation contains arrows to models -->
+<path d="M175,1095 L175,1065 L320,1065 L320,962 L320,962" class="arrow arrow-contains" marker-end="url(#ar-contains)" fill="none"/>
+<text x="325" y="1030" class="arrow-label">contains</text>
+<path d="M175,1095 L175,1070 L322,1070 L322,757 L320,757" class="arrow arrow-contains" marker-end="url(#ar-contains)" fill="none"/>
+<path d="M175,1095 L175,1075 L324,1075 L324,557 L320,557" class="arrow arrow-contains" marker-end="url(#ar-contains)" fill="none"/>
+<path d="M175,1095 L175,1080 L326,1080 L326,300 L320,300" class="arrow arrow-contains" marker-end="url(#ar-contains)" fill="none"/>
+
+
+<!-- ================================================================ -->
+<!-- =================== COLUMN 2: Scheduler.java ================== -->
+<!-- ================================================================ -->
+
+<!-- Scheduler abstract class -->
+<rect x="375" y="105" width="290" height="280" rx="8" class="box-abstract" stroke-width="2"/>
+<text x="520" y="126" class="box-title" text-anchor="middle" font-style="italic">«abstract» Scheduler</text>
+<line x1="385" y1="136" x2="655" y2="136" stroke="#1976d2" stroke-width="1.5"/>
+<text x="390" y="153" class="box-label">Protected Fields (inherited by subclass):</text>
+<text x="395" y="170" class="box-detail">- subjects: List&lt;Subject&gt;</text>
+<text x="395" y="185" class="box-detail">- rooms: List&lt;Classroom&gt;</text>
+<text x="395" y="200" class="box-detail">- faculty: List&lt;Faculty&gt;</text>
+<text x="395" y="215" class="box-detail">- slots: List&lt;TimeSlot&gt;</text>
+<line x1="385" y1="224" x2="655" y2="224" stroke="#1976d2" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="390" y="240" class="box-label">Constructor:</text>
+<text x="395" y="257" class="box-detail">+ Scheduler(subjects, rooms, faculty, slots)</text>
+<text x="395" y="272" class="box-detail">  → stores all lists in protected fields</text>
+<line x1="385" y1="280" x2="655" y2="280" stroke="#1976d2" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="390" y="296" class="box-label">Abstract Method (must be implemented):</text>
+<rect x="390" y="305" width="255" height="26" rx="3" class="box-method"/>
+<text x="520" y="320" class="box-detail" text-anchor="middle" font-style="italic">+ schedule(): List&lt;Allocation&gt;  «abstract»</text>
+<text x="395" y="365" class="box-subtitle">throws SchedulingException</text>
+
+<!-- SchedulingException class -->
+<rect x="375" y="425" width="290" height="110" rx="8" class="box-abstract"/>
+<text x="520" y="446" class="box-title" text-anchor="middle">SchedulingException</text>
+<text x="520" y="463" class="box-subtitle" text-anchor="middle">extends Exception</text>
+<line x1="385" y1="470" x2="655" y2="470" stroke="#1976d2" stroke-width="1"/>
+<text x="390" y="488" class="box-label">Custom Exception (Exp 5):</text>
+<text x="395" y="505" class="box-detail">+ SchedulingException(message: String)</text>
+<text x="395" y="522" class="box-detail">  → calls super(message)</text>
+
+<!-- Java's built-in Exception class -->
+<rect x="375" y="585" width="290" height="40" rx="6" fill="#e8e8e8" stroke="#999"/>
+<text x="520" y="608" class="box-title" text-anchor="middle" fill="#666">java.lang.Exception  (Java built-in)</text>
+
+<!-- Exception inherits from built-in -->
+<path d="M520,585 L520,535" class="arrow arrow-inherits" marker-end="url(#ar-inherits)"/>
+<text x="525" y="563" class="arrow-label">extends</text>
+
+<!-- Scheduler throws SchedulingException -->
+<path d="M520,385 L520,425" class="arrow arrow-calls" marker-end="url(#ar-calls)"/>
+<text x="525" y="408" class="arrow-label">throws</text>
+
+<!-- BacktrackingScheduler inherits Scheduler (shown in column 3) -->
+
+<!-- ================================================================ -->
+<!-- ================ COLUMN 3: BacktrackingScheduler =============== -->
+<!-- ================================================================ -->
+
+<!-- BacktrackingScheduler class -->
+<rect x="720" y="105" width="315" height="460" rx="8" class="box-class" stroke-width="2.5"/>
+<text x="878" y="126" class="box-title" text-anchor="middle" font-size="13.5px">⭐ BacktrackingScheduler</text>
+<text x="878" y="143" class="box-subtitle" text-anchor="middle">extends Scheduler</text>
+<line x1="730" y1="152" x2="1025" y2="152" stroke="#4caf50" stroke-width="1.5"/>
+
+<text x="735" y="170" class="box-label">Constructor:</text>
+<text x="740" y="187" class="box-detail">+ BacktrackingScheduler(subjects, rooms,</text>
+<text x="745" y="202" class="box-detail">       faculty, slots)</text>
+<text x="745" y="217" class="box-subtitle">→ calls super() to pass data to Scheduler</text>
+
+<line x1="730" y1="227" x2="1025" y2="227" stroke="#4caf50" stroke-width="0.5" stroke-dasharray="3 2"/>
+
+<text x="735" y="244" class="box-label">Public Method (Override):</text>
+<rect x="738" y="252" width="288" height="26" rx="3" class="box-method"/>
+<text x="882" y="267" class="box-detail" text-anchor="middle">+ schedule(): List&lt;Allocation&gt;  [Override]</text>
+<text x="740" y="293" class="box-detail">1. Creates empty result list</text>
+<text x="740" y="308" class="box-detail">2. Calls solve(0, result)</text>
+<text x="740" y="323" class="box-detail">3. Throws SchedulingException if no solution</text>
+<text x="740" y="338" class="box-detail">4. Returns completed schedule list</text>
+
+<line x1="730" y1="348" x2="1025" y2="348" stroke="#4caf50" stroke-width="0.5" stroke-dasharray="3 2"/>
+
+<text x="735" y="365" class="box-label">Private Method — The Backtracking Logic:</text>
+<rect x="738" y="373" width="288" height="26" rx="3" class="box-method"/>
+<text x="882" y="388" class="box-detail" text-anchor="middle">- solve(subjectIndex: int, current: List): boolean</text>
+<text x="740" y="413" class="box-detail">Base case: if index &gt;= subjects.size() → true</text>
+<text x="740" y="428" class="box-detail">Try each: TimeSlot × Classroom × Faculty</text>
+<text x="740" y="443" class="box-detail">If isValid() → add Allocation, recurse</text>
+<text x="740" y="458" class="box-detail">If recursion fails → remove last (backtrack)</text>
+<text x="740" y="473" class="box-detail">If no combo works → return false</text>
+
+<line x1="730" y1="483" x2="1025" y2="483" stroke="#4caf50" stroke-width="0.5" stroke-dasharray="3 2"/>
+
+<text x="735" y="500" class="box-label">Private Method — Constraint Checker:</text>
+<rect x="738" y="508" width="288" height="26" rx="3" class="box-method"/>
+<text x="882" y="523" class="box-detail" text-anchor="middle">- isValid(subject, slot, room, fac, current): boolean</text>
+<text x="740" y="548" class="box-subtitle">Constraint 1: Room not already booked in this slot</text>
+<text x="740" y="563" class="box-subtitle">Constraint 2: Faculty not already busy in this slot</text>
+<text x="740" y="578" class="box-subtitle">Constraint 3: No batch conflict (same dept+semester)</text>
+<text x="740" y="593" class="box-subtitle">Constraint 4: Room capacity &gt;= student count</text>
+
+<!-- Inherits from Scheduler — cross-column arrow -->
+<path d="M665,225 L700,225 L700,148 L720,148" class="arrow arrow-inherits" marker-end="url(#ar-inherits)" stroke="#8e44ad" fill="none" stroke-width="2"/>
+<text x="680" y="197" class="arrow-label" transform="rotate(-90, 680, 197)">extends</text>
+
+<!-- solve() creates Allocation -->
+<rect x="720" y="645" width="315" height="50" rx="8" fill="#fce4b8" stroke="#e8a838"/>
+<text x="878" y="666" class="box-title" text-anchor="middle">new Allocation(...)</text>
+<text x="878" y="683" class="box-subtitle" text-anchor="middle">instantiated inside solve() on valid assignment</text>
+<path d="M878,608 L878,645" class="arrow arrow-creates" marker-end="url(#ar-creates)"/>
+<text x="883" y="630" class="arrow-label">creates</text>
+
+<!-- solve calls isValid -->
+<path d="M1008,388 L1040,388 L1040,523 L1026,523" class="arrow arrow-calls" marker-end="url(#ar-calls)" fill="none"/>
+<text x="1045" y="460" class="arrow-label">calls</text>
+
+<!-- schedule() calls solve() -->
+<path d="M1006,267 L1060,267 L1060,388 L1026,388" class="arrow arrow-calls" marker-end="url(#ar-calls)" fill="none"/>
+<text x="1065" y="330" class="arrow-label">calls</text>
+
+
+<!-- ================================================================ -->
+<!-- ======= COLUMN 4: MainFrame.java + DatabaseHelper.java ========= -->
+<!-- ================================================================ -->
+
+<!-- DatabaseHelper -->
+<rect x="1095" y="105" width="315" height="430" rx="8" class="box-db" stroke-width="2"/>
+<text x="1253" y="126" class="box-title" text-anchor="middle">DatabaseHelper</text>
+<text x="1253" y="142" class="box-subtitle" text-anchor="middle">All JDBC operations — static methods only</text>
+<line x1="1105" y1="152" x2="1400" y2="152" stroke="#9c27b0" stroke-width="1.5"/>
+
+<text x="1110" y="170" class="box-label">Connection:</text>
+<text x="1115" y="186" class="box-detail">- getConnection(): Connection  (private static)</text>
+<text x="1120" y="201" class="box-detail">  URL: jdbc:mysql://localhost:3306/examcell</text>
+
+<line x1="1105" y1="210" x2="1400" y2="210" stroke="#9c27b0" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="1110" y="226" class="box-label">Subject operations:</text>
+<text x="1115" y="242" class="box-detail">+ addSubject(s: Subject): void</text>
+<text x="1115" y="257" class="box-detail">+ getAllSubjects(): List&lt;Subject&gt;</text>
+
+<line x1="1105" y1="266" x2="1400" y2="266" stroke="#9c27b0" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="1110" y="282" class="box-label">Classroom operations:</text>
+<text x="1115" y="298" class="box-detail">+ addClassroom(c: Classroom): void</text>
+<text x="1115" y="313" class="box-detail">+ getAllClassrooms(): List&lt;Classroom&gt;</text>
+
+<line x1="1105" y1="322" x2="1400" y2="322" stroke="#9c27b0" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="1110" y="338" class="box-label">Faculty operations:</text>
+<text x="1115" y="354" class="box-detail">+ addFaculty(f: Faculty): void</text>
+<text x="1115" y="369" class="box-detail">+ getAllFaculty(): List&lt;Faculty&gt;</text>
+
+<line x1="1105" y1="378" x2="1400" y2="378" stroke="#9c27b0" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="1110" y="394" class="box-label">TimeSlot + Allocation:</text>
+<text x="1115" y="410" class="box-detail">+ getAllTimeSlots(): List&lt;TimeSlot&gt;</text>
+<text x="1115" y="425" class="box-detail">+ saveAllocations(list): void</text>
+<text x="1120" y="440" class="box-subtitle">→ DELETE old allocations, then INSERT all new</text>
+<text x="1115" y="456" class="box-detail">+ getTimetable(): List&lt;String[]&gt;</text>
+<text x="1120" y="471" class="box-subtitle">→ SQL JOIN across all 4 tables (used by Servlet)</text>
+<text x="1115" y="490" class="box-detail">All methods: try-catch (SQLException)</text>
+<text x="1120" y="505" class="box-subtitle">→ Exception Handling (Exp 5)</text>
+<text x="1120" y="520" class="box-subtitle">Uses: Connection, PreparedStatement, ResultSet</text>
+
+
+<!-- MainFrame -->
+<rect x="1095" y="570" width="315" height="530" rx="8" class="box-swing" stroke-width="2.5"/>
+<text x="1253" y="591" class="box-title" text-anchor="middle" font-size="13.5px">⭐ MainFrame</text>
+<text x="1253" y="607" class="box-subtitle" text-anchor="middle">extends JFrame, implements Exportable</text>
+<line x1="1105" y1="617" x2="1400" y2="617" stroke="#17a2b8" stroke-width="1.5"/>
+
+<text x="1110" y="635" class="box-label">Fields:</text>
+<text x="1115" y="651" class="box-detail">- subjectModel, classroomModel, facultyModel,</text>
+<text x="1120" y="666" class="box-detail">  resultModel: DefaultTableModel</text>
+<text x="1115" y="681" class="box-detail">- generateBtn, exportBtn: JButton</text>
+<text x="1115" y="696" class="box-detail">- currentSchedule: List&lt;Allocation&gt;</text>
+
+<line x1="1105" y1="705" x2="1400" y2="705" stroke="#17a2b8" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="1110" y="721" class="box-label">Constructor — builds tabbed window:</text>
+<text x="1115" y="737" class="box-detail">+ MainFrame()</text>
+<text x="1120" y="753" class="box-subtitle">JTabbedPane with 4 tabs:</text>
+<text x="1125" y="768" class="box-subtitle">  "Subjects" → createSubjectPanel()</text>
+<text x="1125" y="783" class="box-subtitle">  "Classrooms" → createClassroomPanel()</text>
+<text x="1125" y="798" class="box-subtitle">  "Faculty" → createFacultyPanel()</text>
+<text x="1125" y="813" class="box-subtitle">  "Generate Schedule" → createSchedulePanel()</text>
+
+<line x1="1105" y1="823" x2="1400" y2="823" stroke="#17a2b8" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="1110" y="840" class="box-label">UI + CRUD Methods:</text>
+<text x="1115" y="856" class="box-detail">- createSubjectPanel(): JPanel</text>
+<text x="1115" y="871" class="box-detail">- createClassroomPanel(): JPanel</text>
+<text x="1115" y="886" class="box-detail">- createFacultyPanel(): JPanel</text>
+<text x="1115" y="901" class="box-detail">- createSchedulePanel(): JPanel</text>
+<text x="1115" y="916" class="box-detail">- refreshSubjects(), refreshClassrooms(), refreshFaculty()</text>
+
+<line x1="1105" y1="926" x2="1400" y2="926" stroke="#17a2b8" stroke-width="0.5" stroke-dasharray="3 2"/>
+<text x="1110" y="942" class="box-label">Key Methods (Algorithm + Export):</text>
+<rect x="1110" y="950" width="282" height="26" rx="3" class="box-method"/>
+<text x="1253" y="965" class="box-detail" text-anchor="middle">- generateSchedule(): void  [Multithreading]</text>
+<text x="1120" y="990" class="box-subtitle">→ new Thread(() -&gt; { ... }).start()</text>
+<text x="1120" y="1005" class="box-subtitle">→ loads data via DatabaseHelper</text>
+<text x="1120" y="1020" class="box-subtitle">→ creates BacktrackingScheduler, calls .schedule()</text>
+<text x="1120" y="1035" class="box-subtitle">→ saves result, updates table via SwingUtilities</text>
+<rect x="1110" y="1045" width="282" height="26" rx="3" class="box-method"/>
+<text x="1253" y="1060" class="box-detail" text-anchor="middle">+ exportToFile(filePath): void  [File I/O, @Override]</text>
+<text x="1120" y="1082" class="box-subtitle">→ BufferedWriter + FileWriter → timetable.txt</text>
+<text x="1120" y="1097" class="box-subtitle">→ Implements Exportable interface (Exp 3)</text>
+
+<!-- MainFrame implements Exportable -->
+<path d="M1175,570 L1175,550 L60,550 L60,160" class="arrow arrow-implements" marker-end="url(#ar-implements)" fill="none" stroke="#f57c00" stroke-dasharray="5 3"/>
+<text x="580" y="545" class="arrow-label">implements Exportable</text>
+
+<!-- MainFrame calls DatabaseHelper -->
+<path d="M1253,570 L1253,535" class="arrow arrow-calls" marker-end="url(#ar-calls)"/>
+<text x="1258" y="554" class="arrow-label">calls</text>
+
+<!-- MainFrame creates BacktrackingScheduler -->
+<path d="M1095,1010 L1070,1010 L1070,150 L1035,150" class="arrow arrow-creates" marker-end="url(#ar-creates)" fill="none"/>
+<text x="1038" y="585" class="arrow-label" transform="rotate(-90, 1050, 585)">instantiates BacktrackingScheduler</text>
+
+<!-- MainFrame stores currentSchedule (List of Allocation) -->
+<path d="M1095,690 L340,690 L340,1160 L320,1160" class="arrow arrow-contains" marker-end="url(#ar-contains)" fill="none"/>
+<text x="680" y="685" class="arrow-label">stores List&lt;Allocation&gt;</text>
+
+<!-- ================================================================ -->
+<!-- =================== COLUMN 5: Web Layer ======================== -->
+<!-- ================================================================ -->
+
+<!-- Main.java -->
+<rect x="1470" y="105" width="295" height="130" rx="8" class="box-main" stroke-width="2"/>
+<text x="1618" y="126" class="box-title" text-anchor="middle">Main.java — Entry Point</text>
+<line x1="1480" y1="135" x2="1755" y2="135" stroke="#e8a838" stroke-width="1.5"/>
+<text x="1485" y="153" class="box-detail">+ main(String[] args)</text>
+<text x="1490" y="170" class="box-subtitle">1. Class.forName("com.mysql.cj.jdbc.Driver")</text>
+<text x="1490" y="185" class="box-subtitle">   → loads JDBC driver, catches ClassNotFoundEx</text>
+<text x="1490" y="200" class="box-subtitle">2. SwingUtilities.invokeLater()</text>
+<text x="1490" y="215" class="box-subtitle">   → creates new MainFrame(), .setVisible(true)</text>
+
+<!-- Main.java creates MainFrame -->
+<path d="M1470,175 L1430,175 L1430,680 L1410,680" class="arrow arrow-creates" marker-end="url(#ar-creates)" fill="none"/>
+<text x="1433" y="430" class="arrow-label" transform="rotate(-90, 1433, 430)">creates MainFrame</text>
+
+<!-- ViewTimetableServlet -->
+<rect x="1470" y="280" width="295" height="185" rx="8" class="box-servlet" stroke-width="2"/>
+<text x="1618" y="301" class="box-title" text-anchor="middle">ViewTimetableServlet</text>
+<text x="1618" y="317" class="box-subtitle" text-anchor="middle">extends HttpServlet  (Exp 6)</text>
+<line x1="1480" y1="327" x2="1755" y2="327" stroke="#ab47bc" stroke-width="1"/>
+<text x="1485" y="345" class="box-label">Method:</text>
+<text x="1490" y="362" class="box-detail">+ doGet(request, response): void</text>
+<text x="1495" y="378" class="box-subtitle">1. Calls DatabaseHelper.getTimetable()</text>
+<text x="1500" y="393" class="box-subtitle">   → returns List&lt;String[]&gt;</text>
+<text x="1495" y="408" class="box-subtitle">2. request.setAttribute("timetable", data)</text>
+<text x="1495" y="423" class="box-subtitle">3. RequestDispatcher.forward(req, res)</text>
+<text x="1500" y="438" class="box-subtitle">   → forwards to index.jsp</text>
+<text x="1495" y="453" class="box-subtitle">4. URL mapped via web.xml: /timetable</text>
+
+<!-- Servlet calls DatabaseHelper.getTimetable() -->
+<path d="M1470,380 L1430,380 L1430,400 L1410,400" class="arrow arrow-calls" marker-end="url(#ar-calls)" fill="none"/>
+<text x="1415" y="376" class="arrow-label">calls getTimetable()</text>
+
+<!-- index.jsp -->
+<rect x="1470" y="510" width="295" height="185" rx="8" class="box-jsp" stroke-width="2"/>
+<text x="1618" y="531" class="box-title" text-anchor="middle">index.jsp</text>
+<text x="1618" y="547" class="box-subtitle" text-anchor="middle">JSP page — Student/Faculty View (Exp 6)</text>
+<line x1="1480" y1="557" x2="1755" y2="557" stroke="#e53935" stroke-width="1"/>
+<text x="1485" y="575" class="box-detail">Receives: "timetable" attribute from Servlet</text>
+<text x="1490" y="591" class="box-subtitle">← List&lt;String[]&gt; where each row = one exam slot</text>
+<text x="1485" y="610" class="box-detail">Renders: HTML &lt;table&gt; with columns:</text>
+<text x="1495" y="626" class="box-subtitle">Subject | Batch | Room | Faculty | Date | Time</text>
+<text x="1485" y="644" class="box-detail">Shows message if no timetable generated yet</text>
+<text x="1485" y="660" class="box-detail">Styled with inline CSS (no external framework)</text>
+<text x="1485" y="676" class="box-subtitle">Accessed via: http://localhost:8080/ExamCell/timetable</text>
+
+<!-- Servlet forwards to JSP -->
+<path d="M1618,465 L1618,510" class="arrow arrow-calls" marker-end="url(#ar-calls)"/>
+<text x="1623" y="490" class="arrow-label">forwards to</text>
+
+<!-- web.xml -->
+<rect x="1470" y="740" width="295" height="85" rx="8" fill="#e8e8e8" stroke="#999"/>
+<text x="1618" y="761" class="box-title" text-anchor="middle">web.xml</text>
+<text x="1618" y="778" class="box-subtitle" text-anchor="middle">Servlet Configuration</text>
+<line x1="1480" y1="786" x2="1755" y2="786" stroke="#999" stroke-width="0.5"/>
+<text x="1485" y="802" class="box-detail">Maps: /timetable → ViewTimetableServlet</text>
+<text x="1485" y="817" class="box-detail">welcome-file: index.jsp</text>
+
+<!-- schema.sql -->
+<rect x="1470" y="875" width="295" height="130" rx="8" fill="#fff3e0" stroke="#fb8c00"/>
+<text x="1618" y="896" class="box-title" text-anchor="middle">schema.sql</text>
+<text x="1618" y="912" class="box-subtitle" text-anchor="middle">MySQL Database</text>
+<line x1="1480" y1="920" x2="1755" y2="920" stroke="#fb8c00" stroke-width="1"/>
+<text x="1485" y="938" class="box-detail">Tables: subjects, classrooms, faculty,</text>
+<text x="1490" y="953" class="box-detail">        time_slots, allocations</text>
+<text x="1485" y="970" class="box-detail">• FOREIGN KEY constraints on allocations</text>
+<text x="1485" y="985" class="box-detail">• Pre-loaded sample data (6 subj, 3 rooms,</text>
+<text x="1490" y="1000" class="box-detail">  4 faculty, 4 time slots)</text>
+
+<!-- timetable.txt output -->
+<rect x="1470" y="1055" width="295" height="65" rx="8" class="box-output"/>
+<text x="1618" y="1076" class="box-title" text-anchor="middle">📄 timetable.txt</text>
+<text x="1618" y="1093" class="box-subtitle" text-anchor="middle">Generated by exportToFile()</text>
+<text x="1485" y="1110" class="box-detail">Plain text file: formatted exam schedule</text>
+
+<!-- MainFrame exportToFile → timetable.txt -->
+<path d="M1253,1097 L1253,1130 L1455,1130 L1455,1085 L1470,1085" class="arrow arrow-saves" marker-end="url(#ar-saves)" fill="none"/>
+<text x="1350" y="1125" class="arrow-label">writes</text>
+
+<!-- DatabaseHelper reads/writes schema.sql database -->
+<path d="M1400,350 L1450,350 L1450,915 L1470,915" class="arrow arrow-reads" marker-end="url(#ar-reads)" fill="none"/>
+<text x="1405" y="638" class="arrow-label" transform="rotate(-90, 1420, 638)">reads / writes DB</text>
+
+
+<!-- ================================================================ -->
+<!-- ========================== DATA FLOW BOX ======================= -->
+<!-- ================================================================ -->
+
+<rect x="720" y="750" width="315" height="235" rx="8" fill="#f9f9f9" stroke="#bbb" stroke-width="1.5" stroke-dasharray="6 3"/>
+<text x="878" y="772" class="box-title" text-anchor="middle" fill="#555">Runtime Data Flow</text>
+<line x1="730" y1="781" x2="1025" y2="781" stroke="#bbb" stroke-width="1"/>
+<text x="735" y="798" class="box-detail">1. MainFrame loads data via DatabaseHelper</text>
+<text x="745" y="813" class="box-detail">   getAllSubjects(), getAllClassrooms(), ...</text>
+<text x="735" y="830" class="box-detail">2. BacktrackingScheduler created with lists</text>
+<text x="735" y="847" class="box-detail">3. Thread runs scheduler.schedule()</text>
+<text x="735" y="862" class="box-detail">4. solve() iterates, calls isValid(), builds</text>
+<text x="745" y="877" class="box-detail">   List&lt;Allocation&gt; one item at a time</text>
+<text x="735" y="894" class="box-detail">5. DatabaseHelper.saveAllocations(result)</text>
+<text x="735" y="910" class="box-detail">6. SwingUtilities.invokeLater() updates UI</text>
+<text x="735" y="928" class="box-detail">7. Servlet reads result → JSP displays it</text>
+<text x="735" y="945" class="box-detail">8. Export button → timetable.txt</text>
+
+
+<!-- ================================================================ -->
+<!-- ====================== LEGEND ================================== -->
+<!-- ================================================================ -->
+<rect x="30" y="1340" width="1040" height="140" fill="white" stroke="#ccc" rx="8"/>
+<text x="50" y="1365" class="box-title" font-size="13px">Legend</text>
+
+<!-- Box types row 1 -->
+<rect x="50"  y="1380" width="16" height="14" rx="3" class="box-class"/>    <text x="72"  y="1390" class="legend">Class (concrete)</text>
+<rect x="200" y="1380" width="16" height="14" rx="3" class="box-abstract"/> <text x="222" y="1390" class="legend">Abstract Class</text>
+<rect x="355" y="1380" width="16" height="14" rx="3" class="box-interface"/><text x="377" y="1390" class="legend">Interface</text>
+<rect x="470" y="1380" width="16" height="14" rx="3" class="box-db"/>       <text x="492" y="1390" class="legend">Database / JDBC</text>
+<rect x="620" y="1380" width="16" height="14" rx="3" class="box-swing"/>    <text x="642" y="1390" class="legend">Swing UI</text>
+<rect x="720" y="1380" width="16" height="14" rx="3" class="box-servlet"/>  <text x="742" y="1390" class="legend">Servlet / Web</text>
+<rect x="840" y="1380" width="16" height="14" rx="3" class="box-output"/>   <text x="862" y="1390" class="legend">Output File</text>
+<rect x="940" y="1380" width="16" height="14" rx="3" class="box-method"/>   <text x="962" y="1390" class="legend">Method</text>
+
+<!-- Arrow types row 2 -->
+<line x1="50"  y1="1420" x2="80"  y2="1420" stroke="#8e44ad" stroke-width="2" marker-end="url(#ar-inherits)"/> <text x="90"  y="1423" class="legend">Extends (Inherits)</text>
+<line x1="200" y1="1420" x2="230" y2="1420" stroke="#f57c00" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#ar-implements)"/> <text x="240" y="1423" class="legend">Implements</text>
+<line x1="350" y1="1420" x2="380" y2="1420" stroke="#27ae60" stroke-width="2" marker-end="url(#ar-contains)"/> <text x="390" y="1423" class="legend">Contains / Has-a</text>
+<line x1="500" y1="1420" x2="530" y2="1420" stroke="#e67e22" stroke-width="2" marker-end="url(#ar-calls)"/>   <text x="540" y="1423" class="legend">Calls / Invokes</text>
+<line x1="630" y1="1420" x2="660" y2="1420" stroke="#c0392b" stroke-width="2" marker-end="url(#ar-creates)"/> <text x="670" y="1423" class="legend">Creates / Instantiates</text>
+<line x1="800" y1="1420" x2="830" y2="1420" stroke="#7f8c8d" stroke-width="2" marker-end="url(#ar-reads)"/>   <text x="840" y="1423" class="legend">Reads from DB</text>
+<line x1="940" y1="1420" x2="970" y2="1420" stroke="#d35400" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#ar-saves)"/> <text x="980" y="1423" class="legend">Writes / Saves</text>
+
+<!-- Note row -->
+<text x="50" y="1455" class="legend" font-style="italic" fill="#888">⭐ = Primary / central entities    |    Each column = one Java file    |    All classes in default package (no sub-folders)</text>
+
+</svg>
+</div>
+</body>
+</html>
